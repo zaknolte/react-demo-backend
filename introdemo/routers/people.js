@@ -1,5 +1,6 @@
 const peopleRouter = require('express').Router()
 const People = require('../models/people')
+const User = require('../models/users')
 
 
 peopleRouter.get('/info', async (request, response) => {
@@ -45,6 +46,8 @@ peopleRouter.delete('/people/:id', async (request, response, next) => {
 peopleRouter.post('/people', async (request, response, next) => {
     const body = request.body
 
+    const user = await User.findById(body.userId)
+
     if (!body.name || !body.number) {
         return response.status(400).json({
             error: 'Name or number missing'
@@ -60,11 +63,14 @@ peopleRouter.post('/people', async (request, response, next) => {
     const person = new People({
         name: body.name,
         number: body.number,
+        // user: user.id
     })
 
 
     try {
         const newPerson = await person.save()
+        user.phonebook = user.phonebook.concat(newPerson._id)
+        await user.save()
         response.status(201).json(newPerson)
     } catch (error) {
         next(error)

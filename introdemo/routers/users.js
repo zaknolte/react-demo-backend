@@ -1,7 +1,13 @@
 const userRouter = require('express').Router()
 const Users = require('../models/users')
+const People = require('../models/people')
 
 const bcrypt = require('bcrypt')
+
+userRouter.get('/users', async (request, response) => {
+    const users = await Users.find({}).populate('phonebook')
+    response.json(users)
+})
 
 userRouter.post('/users', async (request, response, next) => {
     const body = request.body
