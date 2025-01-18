@@ -1,7 +1,15 @@
 const peopleRouter = require('express').Router()
 const People = require('../models/people')
 const User = require('../models/users')
+const jwt = require('jsonwebtoken')
 
+// get token info from header using Bearer type
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '')
+    } return null
+}
 
 peopleRouter.get('/info', async (request, response) => {
     const people = await People.find({})
@@ -46,7 +54,12 @@ peopleRouter.delete('/people/:id', async (request, response, next) => {
 peopleRouter.post('/people', async (request, response, next) => {
     const body = request.body
 
-    const user = await User.findById(body.userId)
+    // only allow logged in users to add a phonebook contact
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.TOKEN_SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
+    const user = await User.findById(decodedToken.id)
 
     if (!body.name || !body.number) {
         return response.status(400).json({
