@@ -1,7 +1,9 @@
 POST HTTP://localhost:3001/api/people
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3Rpbmd1c2VyIiwiaWQiOiI2NzhiMjdhMGQ3MTVlY2QwYjBjMGUzYzkiLCJpYXQiOjE3MzcxNzMwNzB9.AGIgOIlssXXH8wHp51nN6gz8fcSMQcPcbF37qnmJxPw
 
 {
-    "name": "Artos Helsdfljas",
-    "number": "646456546"
+    "name": "test name",
+    "number": "646455556546",
+    "userId": "678b27a0d715ecd0b0c0e3c9"
 }
